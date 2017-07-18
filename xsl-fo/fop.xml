@@ -1,0 +1,19 @@
+<fop version="1.0">
+
+  <!--strict-configuration>true</strict-configuration>
+  <strict-validation>true</strict-validation>
+  <source-resolution>300</source-resolution>
+  <target-resolution>300</target-resolution -->
+	
+  <renderers>
+    <renderer mime="application/pdf">
+      <compression>JPEG</compression>
+      <fonts>
+	<directory recursive="true">/home/slu/projects/cop-pdf/trunk/fonts</directory>
+	<directory recursive="true">/usr/share/fonts/</directory>
+	<auto-detect/>  
+      </fonts>
+    </renderer>
+  </renderers>
+
+</fop>

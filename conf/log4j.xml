@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<!--
+log4j configuration file, to use for open_search_client, it writes into two logfiles
+the first is an application specific file ${user.home}/syndication.log using the rootloggers 
+loglevel. 
+-->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <!-- Appender for the general logfile, to use for all services -->
+  <appender name="log"
+	    class="org.apache.log4j.RollingFileAppender">
+    <param name="maxFileSize" value="10000KB" />
+    <param name="maxBackupIndex" value="2" />
+    <!-- Logfile name -->
+    <param name="File" value="./kb.dis-cop-pdf.service.log" />
+    <!-- Logs only warn, error and fatal  -->
+    <param name="threshold" value="debug"/>		
+    <layout class="org.apache.log4j.PatternLayout">
+      <!-- This pattern also includes the service name -->
+      <param name="ConversionPattern"
+	     value="[%d{yyyy-MM-dd HH.mm:ss}] %-5p 'kb-dis-cop-pdf-service' %C %M: %m %n" />
+    </layout>
+  </appender>
+
+  <root>
+    <!-- Configuration of the root logger which we use -->
+    <priority value="debug"></priority>
+    <appender-ref ref="log" />
+  </root>
+</log4j:configuration>

@@ -1,0 +1,46 @@
+dojo.environment=LOCAL
+#
+# The active mq server
+coppdf.server=tcp://cop-02.kb.dk:61616
+#
+# The maximum number of threads before we start sleeping a little to allow the
+# running threads complete
+coppdf.threads=5
+# When the number of threads exceed this parameter, we'll sleep for
+coppdf.naplen=10
+# seconds before we get the next job from the queue
+#
+# the name of the queue
+# coppdf.queue=kb.cop.pdf
+coppdf.queue=kb.dataloader.cop.pdf
+#
+# This is for running pdf-generation without notifying cop backend about the location of the pdf
+# coppdf.notify=yes
+# Use
+coppdf.notify=yes
+# if you don't want to update the mods record
+#
+# the name of the style sheet
+coppdf.xsl=file:///home/apache/cop-pdf/xsl-fo/mods2fo.xsl
+# coppdf.xsl=file:///home/slu/projects/cop-pdf/trunk/xsl-fo/mods2fo.xsl
+#
+# the Apache FOP configuration file
+# coppdf.fopConfig=file:///home/cop-pdf/xsl-fo/fop.xml
+coppdf.fopConfig=file:///home/apache/cop-pdf/xsl-fo/fop.xml
+# coppdf.fopConfig=file:///home/slu/projects/cop-pdf/trunk/xsl-fo/fop.xml
+#
+# the URI base for the COP2 backend which should be notified about the location of the PDF
+coppdf.update=http://cop-02.kb.dk:8080/cop/update/
+#coppdf.update=http://localhost:8080/cop/update/
+#
+# the URI base of the pdf itself
+coppdf.extUri=http://www.kb.dk/e-mat/cop/
+#
+# the path to where FOP should store the files
+# coppdf.storage=/home/path-to-pdf-storage-inside-apache/pdf/
+# coppdf.storage=/home/slu/pdf/
+coppdf.storage=/data1/e-mat/cop/
+#
+# the user parameter for the COP2 backend. should be supplied but it neither
+# harm nor benefit. I doesn't do anything.
+coppdf.user=mrPdfGenerator

@@ -1,0 +1,37 @@
+CHANGES
+
+Version 1.12
+
++ Added new Mekorot-Rashi. The font has been reworked by Yoram Gnat. Now supports niqud! (Thank you, Yoram!)
+
++ Moved Mekorot-Rashi from "Hebrew Letters only" directory to "Hebrew Letters with Vowels" directory
+
+
+Version 1.11
+
++ New font by HaGilda: Alef. (Thank you, HaGilda!)
+
+
+Version 1.10
+
++ New Cumliffe-Thompson font: Shuneet.
+
++ Reorganized fonts into categories indicating level of support for Hebrew diacritics.
+
+
+Version 1.09
+
++ New Install, Readme, Licenses, and Changes files.
+
++ New Culmus Project fonts by Yoram Gnat: Shofar and Taamey Ashkenaz. (Thank you, Maxim Iorsh and Yoram Gnat!)
+
++ Updated Culmus Project documentation to 0.130
+
++ Now includes Biblical (Tiro) Keyboard Layouts for Microsoft Windows and Apple OS X operating systems. (Thank you, John Hudson.)
+	
+- Removed Masoretic Hebrew Keyboard Layout
+
+
+Version 1.01 - 1.08
+
++ Apologies. Changes to versions 1.01 through 1.08 were not documented.

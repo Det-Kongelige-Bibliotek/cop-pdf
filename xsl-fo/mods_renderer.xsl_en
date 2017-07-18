@@ -1,0 +1,874 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:md="http://www.loc.gov/mods/v3" xmlns:fo="http://www.w3.org/1999/XSL/Format" version="1.0">
+
+  <xsl:param name="isoplaces" select="document('iso3166.xml')"/>
+  <xsl:param name="resource_type_config" select="document('resource-type.xml')"/>
+
+  <xsl:template name="mods_renderer_en"><xsl:param name="cataloging_language" select="'en'"/>
+
+    <!-- START METADATAELEMENTS -->
+    <!--  START TITLE ELEMENTS -->
+    <!-- START TITLE -->
+    <xsl:if test="md:titleInfo[not(@type) and not(md:subTitle)]">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+	<xsl:for-each select="md:titleInfo[not(@type) and not(md:subTitle)]">
+	  <xsl:if test="md:title">
+	    
+	    <fo:inline font-weight="bold" xml:lang="en">Title: </fo:inline>
+	    <xsl:element name="fo:inline">
+	      <xsl:if test="@xml:lang = 'ar'">
+		<xsl:attribute name="direction">rtl</xsl:attribute>
+		<xsl:attribute name="font-family"><xsl:value-of select="$arabicFont"/></xsl:attribute>
+	      </xsl:if>
+	      <xsl:if test="@xml:lang = 'he'">
+		<xsl:attribute name="direction">rtl</xsl:attribute>
+		<xsl:attribute name="font-family"><xsl:value-of select="$hebrewFont"/></xsl:attribute>
+	      </xsl:if>
+	      <xsl:apply-templates select="(md:nonSort|md:title)[not(@transliteration='rex')]"/>
+	      <xsl:if test="position()&lt;last() and last()&gt;1"><xsl:text>; </xsl:text></xsl:if>
+	    </xsl:element>
+	  </xsl:if>
+	  <xsl:text>
+	  </xsl:text>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+    <!-- END TITLE -->
+
+    <!-- START SUBTITLE -->
+    <xsl:if test="md:titleInfo[md:subTitle]">
+
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:titleInfo[md:subTitle]">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Subtitle: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates select="(md:nonSort|md:subTitle)[not(@transliteration='rex')]"/>
+	    <xsl:if test="position()&lt;last() and last()&gt;1"><xsl:text>; </xsl:text></xsl:if>
+	  </xsl:element>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+    <!-- END SUBTITLE -->
+
+    <!-- START ALTERNATIVE TITLE -->
+    <xsl:if test="md:titleInfo[@type='alternative']">
+
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:titleInfo[@type='alternative']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Alternative title: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates select="(md:nonSort|md:title|md:subTitle)[not(@transliteration='rex')]"/>
+	    <xsl:if test="position()&lt;last() and last()&gt;1"><xsl:text>; </xsl:text></xsl:if>
+	  </xsl:element>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+    <!-- END ALTERNATIVE TITLE -->
+
+    <!-- START TRANSCRIBED TITLE -->
+    <xsl:if test="md:titleInfo[@type='transcribed']">
+
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:titleInfo[@type='transcribed']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Transcribed title: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates select="(md:nonSort|md:title|md:subTitle)[not(@transliteration='rex')]"/>
+	    <xsl:if test="position()&lt;last() and last()&gt;1"><xsl:text>; </xsl:text></xsl:if>
+	  </xsl:element>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+    <!-- END TRANSCRIBED TITLE -->
+
+    <!--  END TITLE ELEMETS -->
+
+    <!-- BEGIN CARTOONS ELEMENTS -->
+
+    <xsl:if test="md:note[@displayLabel='Situation']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+	<xsl:for-each select="md:note[@displayLabel='Situation']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Situation: </fo:inline>
+	    
+	  </xsl:if>
+	  <fo:inline><xsl:apply-templates select="."/></fo:inline>
+
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <xsl:if test="md:note[@displayLabel='Caption']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:note[@displayLabel='Caption']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Caption: </fo:inline>
+	    
+	  </xsl:if>
+	  <fo:inline><xsl:apply-templates select="."/></fo:inline>
+	</xsl:for-each>
+      </xsl:element>
+      
+    </xsl:if>
+
+    <xsl:if test="md:note[@displayLabel='Dialog']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:note[@displayLabel='Dialog']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Dialogue: </fo:inline>
+	    
+	  </xsl:if>
+	  <fo:inline><xsl:apply-templates select="."/></fo:inline>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <!-- END CARTOONS ELEMENTS -->
+
+    <!-- START EVENT -->
+    <xsl:for-each select="md:relatedItem[@type='event']">
+      <xsl:call-template xml:lang="en" name="event_renderer_en"/>
+      
+    </xsl:for-each>
+    <!-- END EVENT -->
+
+
+
+    <!-- START NAME ELEMENTS -->
+
+    <xsl:if test="md:name">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:name[md:role/md:roleTerm[@type='code']='aut']">
+	  <xsl:if test="position()=1">
+	    <xsl:choose>
+	      <xsl:when test="@displayLabel='Sender'">
+		<xsl:choose>
+		  <xsl:when test="@type='personal'">
+		    <fo:inline font-weight="bold" xml:lang="en">Sender: </fo:inline>
+		    
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <fo:inline font-weight="bold" xml:lang="en">Corporate sender: </fo:inline>
+		    
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:choose>
+		  <xsl:when test="@type='personal'">
+		    <fo:inline font-weight="bold" xml:lang="en">Author: </fo:inline>
+		    
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <fo:inline font-weight="bold" xml:lang="en">Corporate author: </fo:inline>
+		    
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:if>
+	  <xsl:call-template name="render_residence"/>
+	  <xsl:call-template name="break_semicolon"/>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:name[md:role/md:roleTerm[@type='text']='creator']">
+	  <xsl:if test="position()=1">
+	    <xsl:choose>
+	      <xsl:when test="@type = 'corporate'">
+		<fo:inline font-weight="bold" xml:lang="en">Corporate creator: </fo:inline>
+		
+	      </xsl:when>
+	      <xsl:otherwise>
+		<fo:inline font-weight="bold" xml:lang="en">Creator: </fo:inline>
+		
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:if>
+	  <xsl:call-template name="break_semicolon"/>
+	</xsl:for-each>
+
+	<xsl:for-each select="          md:name[@type='personal'][md:role/md:roleTerm[@type='code']='prt']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Printer: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<xsl:for-each select="          md:name[@type='personal'][md:role/md:roleTerm[@type='code']='ctb']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Contributor: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:name[md:role/md:roleTerm[@type='code']='src']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Scribe: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:namePart[not(@transliteration='rex')]"/>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:name[md:role/md:roleTerm[@type='code']='pat']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Patron: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:namePart[not(@transliteration='rex')]"/>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:name[md:role/md:roleTerm[@type='code']='rcp']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Recipient: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:namePart[not(@transliteration='rex')]"/>
+	  <xsl:call-template name="render_residence"/>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+
+
+      </xsl:element>
+    </xsl:if>
+    <!-- END NAME ELEMENTS -->
+    <!-- START NOTE -->
+    <xsl:for-each select="md:note[@type='content'and not(@transliteration='rex')]">
+
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+
+
+	<xsl:if test="position()=1">
+	  <fo:inline font-weight="bold" xml:lang="en">Note: </fo:inline>
+	  
+	</xsl:if>
+
+	<xsl:value-of select="."/>
+	<xsl:text>
+	</xsl:text>
+      </xsl:element>
+    </xsl:for-each>
+    <!-- END NOTE -->
+
+    <xsl:if test="md:typeOfResource">
+      <xsl:for-each select="md:typeOfResource">
+
+	<xsl:variable name="key" select="normalize-space(.)"/>
+
+	<xsl:element name="fo:block">
+	  <xsl:attribute name="font-size">12pt</xsl:attribute>  
+	  <xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+
+	  <fo:inline font-weight="bold" xml:lang="en">Resource type: </fo:inline>
+	  
+
+	  <xsl:element xml:lang="en" name="fo:inline">
+	    <xsl:attribute name="xml:lang">en</xsl:attribute>
+	    <xsl:value-of select="."/>
+	    <xsl:if test="@manuscript = 'yes'">
+	      <xsl:text> (manuscript)</xsl:text>
+	    </xsl:if>
+	  </xsl:element>
+
+	  
+
+	</xsl:element>
+      </xsl:for-each>
+    </xsl:if>
+
+    <!-- START NOTE -->
+    <xsl:if test="md:genre">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:choose>
+	  <xsl:when test="count(md:genre)&gt;1">
+	    <fo:inline font-weight="bold" xml:lang="en">Genres: </fo:inline>
+	    
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <fo:inline font-weight="bold" xml:lang="en">Genre: </fo:inline>
+	    
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:for-each select="md:genre">
+	  <xsl:attribute name="xml:lang">
+	    <xsl:value-of select="@xml:lang"/>
+	  </xsl:attribute>
+	  <xsl:value-of select="."/>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+    <!-- END NOTE -->
+
+    <!-- Physical Description -->
+    <xsl:if test="md:physicalDescription[@displayLabel='Medium']|     md:physicalDescription[@displayLabel='Size']|      md:physicalDescription[@displayLabel='Extent']|     md:physicalDescription[md:note[@type='technique']]">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+	<xsl:for-each select="md:physicalDescription[@displayLabel='Medium']">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Medium: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:note"/><xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:physicalDescription[md:note[@type='technique']]">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Technique: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:note"/><xsl:choose><xsl:when test="position() = last()"><br/></xsl:when><xsl:otherwise><xsl:text>
+	</xsl:text></xsl:otherwise></xsl:choose>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:physicalDescription[@displayLabel='Extent']">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Extent: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:extent"/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:physicalDescription[@displayLabel='Size']">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Size: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:extent"/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+
+	<!-- technique -->
+
+	<xsl:for-each select="md:physicalDescription[@displayLabel='Text area']">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Text area: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates select="md:extent"/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <xsl:if test="md:language">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+	<xsl:for-each select="md:language/md:languageTerm">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Languages: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates/>
+	  <xsl:text>
+	  </xsl:text>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <xsl:if test="md:note[@displayLabel='Script']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+      <xsl:for-each select="md:note[@displayLabel='Script']">
+	<xsl:if test="position()=1">
+	  <fo:inline font-weight="bold" xml:lang="en">Script: </fo:inline>
+	  
+	</xsl:if>
+	<xsl:apply-templates/>
+	<xsl:if test="position() = last()"><xsl:text>
+</xsl:text></xsl:if>
+      </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <xsl:if test="md:note[@displayLabel='Script: detail']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+      <xsl:for-each select="md:note[@displayLabel='Script: detail']">
+	<xsl:if test="position()=1">
+	  <fo:inline font-weight="bold" xml:lang="en">Script (detailed): </fo:inline>
+	  
+	</xsl:if>
+	<xsl:apply-templates/>
+	<xsl:if test="position() = last()"><xsl:text>
+	</xsl:text></xsl:if>
+      </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+
+    <!-- START originInfo -->
+
+    <xsl:if test="md:originInfo">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+
+
+	<xsl:for-each select="md:originInfo/md:place/md:placeTerm[@type='text']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Place of origin: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:if test="not(@transliteration)">
+	    <xsl:apply-templates/>
+	  </xsl:if>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:originInfo/md:place/md:placeTerm[@type='code']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Country of origin: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+
+	<xsl:for-each select="md:originInfo/md:dateCreated[@encoding='w3cdtf']">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Date created: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+
+	<xsl:if test="md:originInfo/md:dateCreated[@xml:lang]">
+	  <xsl:if test="not(@encoding='w3cdtf')">
+	    <xsl:if test="position()=1">
+	      <fo:inline font-weight="bold" xml:lang="en">Date created: </fo:inline>
+	      
+	    </xsl:if>
+	  </xsl:if>
+	  <fo:inline>
+	    <xsl:for-each select="md:originInfo/md:dateCreated[@xml:lang]">
+	      <xsl:element name="fo:inline">
+		<xsl:apply-templates/>
+	      </xsl:element>
+	    </xsl:for-each>
+	  </fo:inline>
+	</xsl:if>
+      
+      <xsl:if test="not(md:originInfo/md:dateCreated[@xml:lang])"><xsl:text>
+</xsl:text></xsl:if>
+</xsl:element>
+	<xsl:if test="md:relatedItem[@displayLabel='Publication']">
+
+	  <xsl:for-each select="      md:relatedItem[@displayLabel='Publication']/      md:titleInfo/      md:title">
+	    <xsl:if test="position()=1">
+	      <fo:inline font-weight="bold" xml:lang="en">Publication: </fo:inline>
+	      
+	    </xsl:if>
+	    <xsl:apply-templates/>
+	  </xsl:for-each>
+
+	</xsl:if>
+
+
+
+
+	<!-- START PUBLISHER -->
+	<xsl:for-each select="md:originInfo/md:publisher">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Publisher: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates/>
+	  </xsl:element>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+
+    </xsl:if>
+
+    <!-- END PUBLISHER -->
+    <!-- START SUBJECT ELEMENTS -->
+
+    <xsl:if test="md:subject[not(md:topic/@xlink:href)]">
+
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:subject/md:topic[not(@xlink:href)]">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Topic</fo:inline>
+	    
+	  </xsl:if>
+
+	  <!-- START Topic -->
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates/>
+	  </xsl:element>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<!-- END Topic -->
+
+
+	<xsl:for-each select="md:subject/md:geographic">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Place: </fo:inline>
+	    
+	  </xsl:if>
+	  <!-- START Topic -->
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates/>
+	  </xsl:element>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<!-- END Topic -->
+
+
+	<!-- START PERSON -->
+	<xsl:for-each select="md:subject/md:name">
+	  <xsl:if test="position()=1">
+	    <fo:inline font-weight="bold" xml:lang="en">Person: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:call-template name="break_semicolon">
+	    <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	  </xsl:call-template>
+	</xsl:for-each>
+
+	<!-- END PERSON -->
+
+
+
+	<!-- START ÅRSTAL -->
+	<xsl:if test="md:subject/md:temporal[not(@transliteration='rex')]">
+	  <xsl:for-each select="md:temporal">
+	    <xsl:if test="position()=1">
+	      <fo:inline font-weight="bold" xml:lang="en">Time: </fo:inline>
+	      
+	    </xsl:if>
+	    <xsl:element name="fo:inline">
+	      <xsl:apply-templates select="md:temporal"/>
+	    </xsl:element>
+	    <xsl:call-template name="break_semicolon">
+	      <xsl:with-param name="cataloging_language" select="$cataloging_language"/>
+	    </xsl:call-template>
+	  </xsl:for-each>
+	</xsl:if>
+	<!-- END ÅRSTAL -->
+
+      </xsl:element>
+    </xsl:if>
+    <!-- END SUBJECT ELMENTS -->
+
+    <xsl:if test="md:identifier[@type='accession number']|md:identifier[@type='local']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+	<xsl:for-each select="md:identifier[@type='local']">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold">Id: </fo:inline>
+	  </xsl:if>
+	  <xsl:apply-templates/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+	<xsl:for-each select="md:identifier[@type='accession number']">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Accession number: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <!-- Shelf mark -->
+    <xsl:if test="md:location/md:physicalLocation[not(@transliteration)]">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:location/md:physicalLocation[not(@transliteration)]">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Shelf mark: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:apply-templates/>
+	  <xsl:if test="position() = last()"><xsl:text>
+	  </xsl:text></xsl:if>
+	</xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+
+    <!-- Collection -->
+    <xsl:if test="md:relatedItem[@displayLabel='Collection']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<xsl:for-each select="md:relatedItem[@displayLabel='Collection']">
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Collection: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates select="md:titleInfo"/>
+	  </xsl:element>
+	</xsl:for-each>
+      </xsl:element>
+
+    </xsl:if>
+
+    <!-- References -->
+    <xsl:if test="md:note[@type='citation/reference']">
+      <xsl:for-each select="md:note[@type='citation/reference']">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Selected references: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates/>
+	  </xsl:element>
+      </xsl:element>
+    
+      </xsl:for-each>
+    </xsl:if>
+
+    <!-- a nude note without any decorations whatsoever -->
+    <xsl:if test="md:note[not(@type)]">
+      <xsl:for-each select="md:note[not(@type)]">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	  <xsl:if test="position() = 1">
+	    <fo:inline font-weight="bold" xml:lang="en">Comment: </fo:inline>
+	    
+	  </xsl:if>
+	  <xsl:element name="fo:inline">
+	    <xsl:apply-templates/>
+	  </xsl:element>
+      </xsl:element>
+	
+      </xsl:for-each>
+    </xsl:if>
+
+    <!-- CUSTOM URL  / RELEATED MATERIAL -->
+    <xsl:if test="md:relatedItem[@xlink]">
+      <xsl:for-each select="md:relatedItem[@xlink]">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+	  <fo:inline font-weight="bold" xml:lang="en">Related: </fo:inline>
+	  
+	  <xsl:element name="fo:inline">
+	    <xsl:element name="a">
+	      <xsl:attribute name="href"><xsl:value-of select="@xlink"/></xsl:attribute>
+	      <xsl:choose>
+		<xsl:when test="@displayLabel">
+		  <xsl:value-of select="@displayLabel"/>
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:value-of select="@xlink"/>
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:element>
+	  </xsl:element>
+      </xsl:element>
+      </xsl:for-each>
+    </xsl:if>
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+      <fo:inline font-weight="bold" xml:lang="en">Related: </fo:inline>
+      
+      <fo:inline>
+	
+	<a xml:lang="en" href="">Description of the Edition</a>
+      </fo:inline>
+      </xsl:element>
+
+    <!-- Copyright -->
+    <xsl:if test="md:accessCondition/node()">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>	      
+
+	<fo:inline font-weight="bold" xml:lang="en">Copyright: </fo:inline>
+	
+	<xsl:for-each select="md:accessCondition">
+	  <xsl:choose>
+	    <xsl:when test="text()!='CC BY-NC-ND'">
+	      <xsl:element name="fo:inline">
+		<xsl:attribute name="xml:lang"><xsl:value-of select="@xml:lang"/></xsl:attribute>
+		<xsl:apply-templates/>
+	      </xsl:element>
+	    </xsl:when>
+	  </xsl:choose>
+	  <xsl:choose>
+	    <xsl:when test="text()='CC BY-NC-ND'">
+	      
+	      <fo:inline xml:lang="en"><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png"/></a><br/>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License</a>.</fo:inline>
+	    </xsl:when>
+	  </xsl:choose>
+	</xsl:for-each>
+      </xsl:element>
+
+    </xsl:if>
+
+  </xsl:template>
+
+  <xsl:template name="event_renderer_en"><xsl:param name="cataloging_language" select="'en'"/>
+    <xsl:if test="node()">
+      <xsl:element name="fo:block">
+	<xsl:attribute name="font-size">12pt</xsl:attribute>  
+	<xsl:attribute name="linefeed-treatment">preserve</xsl:attribute>
+
+        <fo:inline font-weight="bold" xml:lang="en">Event:</fo:inline>
+        <xsl:text>
+	</xsl:text>
+
+        <fo:inline>
+          <xsl:if test="md:titleInfo/md:title">
+            <xsl:for-each select="md:titleInfo">
+              <xsl:for-each select="md:title">
+                <xsl:apply-templates/>
+              </xsl:for-each>
+            </xsl:for-each>
+          </xsl:if>
+
+          <xsl:for-each select="md:typeOfResource">
+            <xsl:if test="position()=1"><br/></xsl:if>
+            <xsl:apply-templates/><xsl:if test="position()&lt;last()"><xsl:text>; </xsl:text></xsl:if>
+	    <xsl:text>
+	    </xsl:text>
+          </xsl:for-each>
+
+          <xsl:for-each select="md:originInfo">
+            <xsl:for-each select="md:place">
+              <xsl:for-each select="md:placeTerm"><xsl:apply-templates/></xsl:for-each>
+            </xsl:for-each><xsl:text>;
+	    </xsl:text>
+            <xsl:for-each select="md:dateIssued">
+              <xsl:apply-templates/>
+            </xsl:for-each><xsl:text>;
+	    </xsl:text>
+          </xsl:for-each>
+
+          <xsl:for-each select="md:note">
+            <xsl:if test="position()=1"><br/></xsl:if>
+            <xsl:apply-templates/>
+	    <xsl:text>
+	    </xsl:text>
+          </xsl:for-each>
+
+          <xsl:for-each select="md:name">
+            <xsl:if test="position()=1"><br/></xsl:if>
+            <xsl:for-each select="md:namePart">
+              <xsl:apply-templates/><xsl:if test="position()&lt;last()"><xsl:text> </xsl:text></xsl:if>
+            </xsl:for-each><xsl:if test="position()&lt;last()"><xsl:text>; </xsl:text></xsl:if>
+          </xsl:for-each>
+        </fo:inline>
+      </xsl:element>
+    </xsl:if>
+  </xsl:template>
+
+
+  <xsl:template match="md:nonSort|md:title|md:subTitle|md:namePart">
+    <xsl:element name="fo:inline">
+      <xsl:if test="../@xml:lang = 'he'">
+	<xsl:attribute name="font-family"><xsl:value-of select="$hebrewFont"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="../@xml:lang = 'ar'">
+	<xsl:attribute name="font-family"><xsl:value-of select="$arabicFont"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="../@xml:lang = 'zh'">
+	<xsl:attribute name="font-family"><xsl:value-of select="$chineseFont"/></xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </xsl:element>
+    <xsl:text> </xsl:text>
+  </xsl:template>
+
+</xsl:transform>

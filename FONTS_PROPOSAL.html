@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>FONTS</title>
+  </head>
+  <body>
+
+    <h1>Fonts and font availability</h1>
+
+    <p>The text on the cover page has to be set in fonts supporting all the scripts
+    used in COP, which is fairly large and includes Latin/Western
+    European, Cyrillic, Greek, Chinese, Arabic and Hebrew.</p>
+
+    <p>Running the <a href="sheet_test.sh">sheet_test.sh</a>, will execute a
+    java class that dumps the names of all available fonts.</p>
+
+    <h2>1. Commercial fonts</h2>
+
+    <p>There are fonts available for the purpose, like Arial Unicode MS and Lucida
+    Sans Unicode, both of which are available as commercial software from
+    Microsoft. </p>
+
+    <p>Here is a book containing text in Arabic script. Everything in Arial Unicode:</p>
+
+    <a href="http://code-01.kb.dk/svn/cop-pdf/trunk/test/object61539.en.pdf">http://code-01.kb.dk/svn/cop-pdf/trunk/test/object61539.en.pdf</a>
+
+    <h2>2. Multiple fonts, open source</h2>
+
+    <p>There are also quite a few other solutions that require the use of multiple
+    fonts depending upon language. This is the same one is using a font family
+    DejaVue, which is open source</p>
+
+    <a href="http://code-01.kb.dk/svn/cop-pdf/trunk/test-oss-fonts/dejavue_arabic.pdf">http://code-01.kb.dk/svn/cop-pdf/trunk/test-oss-fonts/dejavue_arabic.pdf</a>
+
+    <p>However, with Chinese, we have to add another font</p>
+
+    <a href="http://code-01.kb.dk/svn/cop-pdf/trunk/test-oss-fonts/dejavue_grf_chi_chinese.pdf">http://code-01.kb.dk/svn/cop-pdf/trunk/test-oss-fonts/dejavue_grf_chi_chinese.pdf</a>
+
+    <p>Here we are using two fonts. Both of which are open source, so there is no
+    cost for fonts but I had to correct the document since the language of the
+    title was incorrectly set to Danish.</p>
+
+    <h2>3. Singel OSS font</h2>
+
+    <p>I've found a fairly complete font which is said to be GPL. It should in
+    principle be able to do it all.</p>
+
+    <a href="http://code-01.kb.dk/svn/cop-pdf/trunk/test-oss-fonts/Code2000_chinese.pdf">http://code-01.kb.dk/svn/cop-pdf/trunk/test-oss-fonts/Code2000_chinese.pdf</a>
+
+    <p>Problem is that it is written by a mr James Kass as shareware software. The
+    price is set to USD 5 but the author disappeared from the Internet 2010 and
+    since then it isn't known how to use Code2000 legally.</p>
+
+    <a href="http://en.wikipedia.org/wiki/Code2000">http://en.wikipedia.org/wiki/Code2000</a>
+
+    <h2>Conclusion and recommendation</h2>
+
+    <ol>
+      <li>I don't know if we can legally embed Arial Unicode MS, acquired as a part of MS
+      Office, in PDFs published in Denmark in an electronic publishing system. If we
+      can, that is the easisest solution. Obviously, we can pay the license fee. See <br/>
+      <a href="http://www.microsoft.com/typography/fonts/family.aspx?fid=24">http://www.microsoft.com/typography/fonts/family.aspx?fid=24</a><br/>
+      <a href="http://www.ascendercorp.com/font/arial-unicode/">http://www.ascendercorp.com/font/arial-unicode/</a>
+      </li>
+      <li>
+	Is the one I'd recommend, if there hadn't been problems with language tags
+	for our metadata. I like the DejaVue-font and it is free.
+      </li>
+
+      <li>Just don't know. A governmental organization cannot really use things
+      without a proper licence.</li>
+    </ol>
+
+    <p>I recommend alternative 1.</p>
+  </body>
+</html>

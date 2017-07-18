@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>README</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+  </head>
+  <body>
+
+    <h1>README</h1>
+
+    <p>This SVN project contains a tool, which based on a MODS description from
+    COP generates a PDF document using <a
+    href="http://xmlgraphics.apache.org/fop/">Apache FOP</a>, which is an
+    implementation of <a
+    href="http://xmlgraphics.apache.org/fop/fo.html">XSL-FO</a></p>
+
+    <h2>Running cop-pdf processor on a single MODS record</h2>
+
+
+    <p>For information on how to use the java class, see the
+      <a href="http://code-01.kb.dk/svn/cop-pdf/trunk/">source</a></p>
+
+    <p>For testing the layout, fonts etc, it is good to be able to run the
+    thing as a stand-alone application. It can be run from command line. For
+    example</p>
+
+    <pre>    
+      java -classpath &lt;LIB PATH&gt; dk.kb.dis.cumulusdatajobs.pdf.ToPdfProcessor \
+      --config ./fop.xml \      
+      --output printable_version.pdf \
+      --input &lt;MODS_RECORD_URL&gt; \
+      --style &lt;XSLT_URL&gt;
+    </pre>
+
+    <p>where &lt;LIB PATH&gt; is a string containing the Java CLASSPATH. The
+    options take the following paramters:</p>
+
+    <pre>
+      --config the apache fop configuration, 
+      --output the file name of the result,
+      --input  the URI of an input file
+      --style  the URI of the XSLT file 
+    </pre>
+
+    <p>It is easier to run the script <a href="sheet_test.sh">sheet_test.sh</a>.</p>
+
+    <p>To build and run the tests, check out and build (using maven) the
+    cumulus-data-jobs project. Then, assuming this project is in the same
+    directory as cumulus-data-jobs, make the following symbolic links:</p>
+
+    <p>Building with ant dumps a jar file in the directory bin</p>
+
+    <p>Then you can test and work with the xsl and fonts using the shell script
+    <a href="sheet_test.sh">sheet_test.sh</a></p>
+
+    <h2>Reading jobs from a Active MQ</h2>
+
+    <p>cop-pdf can also read URIs of MODS records and create PDFs from an
+    Active MQ. Configuration is read from:</p>
+
+    <pre>
+      conf/kb.cop-pdf.properties
+      conf/log4j.xml
+    </pre>
+
+    <p>Start as a daemon using</p>
+
+    <pre>
+      ./start_cop_pdf.sh
+    </pre>
+
+    <h2>Style sheets</h2>
+
+    <p>The mods to fo style sheets are bilingual (English and Danish). You
+    need to run choose language transform on them to get a single langue
+    version. You do that by running the shell
+    script <kbd>xsl-fo/mk_languages.sh</kbd>.</p>
+
+
+  </body>
+</html>
